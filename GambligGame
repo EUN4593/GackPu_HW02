@@ -1,0 +1,82 @@
+//202304105 ICT융합공학부 이상은
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+class Player {
+    string name;
+public:
+    Player(string name) {
+        this->name = name;
+    }
+
+    string getName() {
+        return name;
+    }
+
+    bool turn() {
+        int numbers[3];
+        // 0~2 사이의 난수를 생성
+        cout << "\t\t";
+        for (int i = 0; i < 3; i++) {
+            numbers[i] = rand() % 3;
+            cout << numbers[i] << "\t";
+        }
+
+        // 세 개의 숫자가 모두 같으면 승리
+        if (numbers[0] == numbers[1] && numbers[1] == numbers[2]) {
+            cout << name << "님 승리!!" << endl;
+            return true;
+        }
+        cout << "아쉽군요!" << endl;
+        return false;
+    }
+};
+
+class GamblingGame {
+    Player* players[2];
+public:
+    GamblingGame(string name1, string name2) {
+        players[0] = new Player(name1);
+        players[1] = new Player(name2);
+    }
+
+    ~GamblingGame() {
+        delete players[0];
+        delete players[1];
+    }
+
+    void start() {
+       
+        int turn = 0;
+        while (true) {
+            cout << players[turn]->getName() << ":<Enter>";
+            cin.get(); // Enter 키 입력 대기
+            if (players[turn]->turn()) {
+                break;
+            }
+            turn = (turn + 1) % 2; // 턴을 번갈아가며 진행
+        }
+    }
+};
+
+int main() {
+    srand((unsigned int)time(0)); // 랜덤 시드 설정
+    cout << "***** 갬블링 게임을 시작합니다. *****" << endl;
+    string name1, name2;
+    cout << "첫번째 선수 이름>>";
+    cin >> name1;
+    cout << "두번째 선수 이름>>";
+    cin >> name2;
+
+    // cin.get()을 호출하여 버퍼에 남아있는 엔터 제거
+    cin.get();
+
+    GamblingGame game(name1, name2);
+    game.start();
+
+    return 0;
+}
